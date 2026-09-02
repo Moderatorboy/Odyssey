@@ -40,6 +40,7 @@
       }
       html {
         scroll-behavior: smooth;
+        overflow-x: hidden;
       }
       body {
         margin: 0;
@@ -47,6 +48,7 @@
         color: var(--paper);
         font-family: var(--font-sans);
         -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
       }
       a {
         color: inherit;
@@ -98,6 +100,7 @@
       .frame {
         position: relative;
         z-index: 1;
+        width: 100%;
         max-width: 900px;
         margin: 0 auto;
         padding: 0 1.75rem;
@@ -113,6 +116,20 @@
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 0.4rem 1.2rem;
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        min-width: 0;
+      }
+      .brand-logo {
+        width: 2.35rem;
+        height: 2.35rem;
+        flex: 0 0 2.35rem;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--cyan-dim);
       }
       .wordmark {
         font-family: var(--font-serif);
@@ -208,6 +225,7 @@
       }
       .search-field {
         flex: 1 1 380px;
+        min-width: 0;
         position: relative;
       }
       .search-field input {
@@ -225,6 +243,7 @@
       .search-field input::placeholder {
         color: var(--fog-dim);
         opacity: 1;
+        text-overflow: ellipsis;
       }
       .search-field input:focus {
         border-bottom-color: var(--cyan);
@@ -459,10 +478,32 @@
         background: rgba(16, 43, 48, 0.35);
       }
       @media (max-width: 679px) {
+        .frame {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
         .masthead-right {
           width: 100%;
           justify-content: space-between;
           gap: 0.8rem;
+        }
+        .portal-tag {
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        form.search-form {
+          align-items: stretch;
+          gap: 0.8rem;
+        }
+        .search-field,
+        .search-submit {
+          flex-basis: 100%;
+          width: 100%;
+        }
+        .search-field input {
+          font-size: 1.15rem;
         }
         .team-list {
           grid-template-columns: 1fr;
@@ -584,7 +625,10 @@
 
     <div class="masthead frame">
       <div class="masthead-row">
-        <span class="wordmark">Odyssey</span>
+        <a class="brand" href="index.html" aria-label="Odyssey home">
+          <img class="brand-logo" src="logo.png" alt="" />
+          <span class="wordmark">Odyssey</span>
+        </a>
         <div class="masthead-right">
           <span class="portal-tag">Polar Research Outreach Portal</span>
           <a class="nav-link" href="viewer.html">Archive</a>
