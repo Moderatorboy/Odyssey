@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Odyssey — Polar Research Outreach Portal</title>
+
+    <!-- Inline SVG Favicon (Cyan Radar/Compass) -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%233ecbdb' stroke-width='10' fill='none'/%3E%3Ccircle cx='50' cy='50' r='15' fill='%233ecbdb'/%3E%3C/svg%3E"
+    />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&display=swap"
@@ -115,7 +123,7 @@
       }
       .masthead-right {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         gap: 1.6rem;
       }
       .portal-tag {
@@ -133,6 +141,23 @@
       .nav-link:hover {
         border-bottom-color: var(--cyan);
         color: var(--cyan-bright);
+      }
+      .theme-toggle {
+        width: 2.2rem;
+        height: 2.2rem;
+        display: inline-grid;
+        place-items: center;
+        border: 1px solid var(--cyan-dim);
+        border-radius: 50%;
+        background: transparent;
+        color: var(--cyan-bright);
+        cursor: pointer;
+        font-size: 1rem;
+        line-height: 1;
+      }
+      .theme-toggle:hover {
+        border-color: var(--cyan);
+        color: var(--cyan);
       }
 
       .cover {
@@ -318,9 +343,10 @@
         }
       }
       .entity-row {
-        display: flex;
-        justify-content: space-between;
-        gap: 1.5rem;
+        display: grid;
+        grid-template-columns: minmax(7rem, auto) minmax(0, 1fr);
+        align-items: baseline;
+        gap: 0.9rem;
         padding: 0.85rem 0;
         border-bottom: 1px solid var(--void-line);
       }
@@ -328,12 +354,119 @@
         font-family: var(--font-serif);
         font-size: 0.98rem;
         color: var(--paper);
-        white-space: nowrap;
+        white-space: normal;
       }
       .entity-row .def {
         font-size: 0.82rem;
         color: var(--fog-dim);
-        text-align: right;
+        text-align: left;
+      }
+
+      .team-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem 1rem;
+      }
+      .team-member {
+        border: 1px solid var(--void-line);
+        border-radius: 2px;
+        background: transparent;
+        color: var(--paper);
+        cursor: pointer;
+        font-family: var(--font-serif);
+        font-size: 1rem;
+        padding: 1rem 1.1rem;
+        text-align: left;
+        transition:
+          border-color 0.15s ease,
+          color 0.15s ease;
+      }
+      .team-member:hover {
+        border-color: var(--cyan);
+        color: var(--cyan-bright);
+      }
+      .profile-modal[hidden] {
+        display: none;
+      }
+      .profile-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 5;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        background: rgba(3, 7, 9, 0.82);
+      }
+      .profile-card {
+        position: relative;
+        width: min(100%, 380px);
+        border: 1px solid var(--cyan-dim);
+        background: var(--void-raised);
+        padding: 2rem;
+        text-align: center;
+      }
+      .profile-card img {
+        width: 7rem;
+        height: 7rem;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--cyan-dim);
+        margin-bottom: 1rem;
+      }
+      .profile-card h2 {
+        color: var(--white);
+        font-family: var(--font-serif);
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin: 0 0 0.55rem;
+      }
+      .profile-card a {
+        color: var(--cyan-bright);
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+      }
+      .modal-close {
+        position: absolute;
+        top: 0.7rem;
+        right: 0.7rem;
+        width: 2rem;
+        height: 2rem;
+        border: 1px solid var(--void-line);
+        background: transparent;
+        color: var(--fog);
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+      .modal-close:hover {
+        border-color: var(--cyan);
+        color: var(--cyan);
+      }
+
+      body.light {
+        --void: #edf5f4;
+        --void-raised: #ffffff;
+        --void-line: #cbdcdb;
+        --cyan: #087f8d;
+        --cyan-bright: #075d67;
+        --cyan-dim: #79aeb3;
+        --white: #102b30;
+        --paper: #1d3d42;
+        --powder: #38666c;
+        --fog: #527277;
+        --fog-dim: #6c888b;
+      }
+      body.light .profile-modal {
+        background: rgba(16, 43, 48, 0.35);
+      }
+      @media (max-width: 679px) {
+        .masthead-right {
+          width: 100%;
+          justify-content: space-between;
+          gap: 0.8rem;
+        }
+        .team-list {
+          grid-template-columns: 1fr;
+        }
       }
 
       .pullquote {
@@ -455,6 +588,14 @@
         <div class="masthead-right">
           <span class="portal-tag">Polar Research Outreach Portal</span>
           <a class="nav-link" href="viewer.html">Archive</a>
+          <button
+            class="theme-toggle"
+            type="button"
+            aria-label="Switch to light mode"
+            title="Switch theme"
+          >
+            ☼
+          </button>
         </div>
       </div>
     </div>
@@ -570,6 +711,69 @@
       </div>
     </section>
 
+    <section class="block frame" aria-labelledby="team-title">
+      <div class="block-head">
+        <h2 id="team-title">Team Odyssey</h2>
+        <p>Meet the people connecting polar research with the world.</p>
+      </div>
+      <div class="team-list">
+        <button
+          class="team-member"
+          type="button"
+          data-name="Yashasvi Yadav"
+          data-email="yashasvi.yadav@odyssey.org"
+          data-photo="https://i.pravatar.cc/240?img=47"
+        >
+          Yashasvi Yadav
+        </button>
+        <button
+          class="team-member"
+          type="button"
+          data-name="Bittu Kumar"
+          data-email="bittu.kumar@odyssey.org"
+          data-photo="https://i.pravatar.cc/240?img=12"
+        >
+          Bittu Kumar
+        </button>
+        <button
+          class="team-member"
+          type="button"
+          data-name="Suryansh Kumar"
+          data-email="suryansh.kumar@odyssey.org"
+          data-photo="https://i.pravatar.cc/240?img=33"
+        >
+          Suryansh Kumar
+        </button>
+        <button
+          class="team-member"
+          type="button"
+          data-name="Ragni Singh"
+          data-email="ragni.singh@odyssey.org"
+          data-photo="https://i.pravatar.cc/240?img=44"
+        >
+          Ragni Singh
+        </button>
+        <button
+          class="team-member"
+          type="button"
+          data-name="Lav Kumar Yadav"
+          data-email="lav.yadav@odyssey.org"
+          data-photo="https://i.pravatar.cc/240?img=68"
+        >
+          Lav Kumar Yadav
+        </button>
+        <button
+          class="team-member"
+          type="button"
+          data-name="Shiwam Kumar"
+          data-email="shiwam.kumar@odyssey.org"
+          data-photo="https://i.pravatar.cc/240?img=53"
+        >
+          Shiwam Kumar
+        </button>
+      </div>
+    </section>
+
     <div class="pullquote frame">
       <p>
         Preserve knowledge. Connect knowledge. Discover knowledge. Communicate
@@ -586,5 +790,60 @@
       <span>Maintained by NCPOR for public and institutional use.</span>
       <span>Odyssey</span>
     </footer>
+
+    <div
+      class="profile-modal"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="profile-name"
+    >
+      <div class="profile-card">
+        <button class="modal-close" type="button" aria-label="Close profile">
+          ×
+        </button>
+        <img class="profile-photo" src="" alt="" />
+        <h2 id="profile-name"></h2>
+        <a class="profile-email" href=""></a>
+      </div>
+    </div>
+
+    <script>
+      const themeToggle = document.querySelector(".theme-toggle");
+      const profileModal = document.querySelector(".profile-modal");
+      const profilePhoto = document.querySelector(".profile-photo");
+      const profileName = document.querySelector("#profile-name");
+      const profileEmail = document.querySelector(".profile-email");
+
+      themeToggle.addEventListener("click", () => {
+        const lightMode = document.body.classList.toggle("light");
+        themeToggle.textContent = lightMode ? "☾" : "☼";
+        themeToggle.setAttribute(
+          "aria-label",
+          lightMode ? "Switch to dark mode" : "Switch to light mode",
+        );
+      });
+
+      document.querySelectorAll(".team-member").forEach((member) => {
+        member.addEventListener("click", () => {
+          profileName.textContent = member.dataset.name;
+          profilePhoto.src = member.dataset.photo;
+          profilePhoto.alt = member.dataset.name;
+          profileEmail.textContent = member.dataset.email;
+          profileEmail.href = `mailto:${member.dataset.email}`;
+          profileModal.hidden = false;
+        });
+      });
+
+      document.querySelector(".modal-close").addEventListener("click", () => {
+        profileModal.hidden = true;
+      });
+      profileModal.addEventListener("click", (event) => {
+        if (event.target === profileModal) profileModal.hidden = true;
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") profileModal.hidden = true;
+      });
+    </script>
   </body>
 </html>
