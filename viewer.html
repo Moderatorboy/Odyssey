@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Archive — Odyssey Polar Research Outreach Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --void: #070b0d;
+        --void-raised: #0d1519;
+        --void-line: #182428;
+        --cyan: #3ecbdb;
+        --cyan-bright: #8be9f2;
+        --cyan-dim: #1f4d54;
+        --white: #eef7f8;
+        --paper: #dfeef0;
+        --powder: #a9c9d6;
+        --slate: #5c7a99;
+        --fog: #86a0a6;
+        --fog-dim: #4c6167;
+        --font-serif: "Source Serif 4", serif;
+        --font-sans: "Inter", sans-serif;
+        --font-mono: "IBM Plex Mono", monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--void);
+        color: var(--paper);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: inherit;
+      }
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible {
+        outline: 1.5px solid var(--cyan);
+        outline-offset: 3px;
+      }
+
+      .frame {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 0 1.75rem;
+      }
+
+      .masthead {
+        border-bottom: 1px solid var(--void-line);
+        padding: 1.6rem 0 1.4rem;
+      }
+      .masthead-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.4rem 1.2rem;
+      }
+      .wordmark {
+        font-family: var(--font-serif);
+        font-weight: 600;
+        font-size: 1.3rem;
+        color: var(--white);
+        text-decoration: none;
+      }
+      .portal-tag {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--fog);
+      }
+
+      .hero {
+        padding: 3.4rem 0 2.6rem;
+        border-bottom: 1px solid var(--void-line);
+      }
+      .hero .kicker {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--cyan);
+        margin: 0 0 1.1rem;
+      }
+      .hero h1 {
+        font-family: var(--font-serif);
+        font-weight: 500;
+        font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+        line-height: 1.28;
+        margin: 0 0 0.8rem;
+        max-width: 34ch;
+        color: var(--white);
+      }
+      .hero p {
+        color: var(--fog);
+        max-width: 60ch;
+        line-height: 1.65;
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      main {
+        padding: 2.6rem 0 5rem;
+      }
+
+      .controls {
+        margin-bottom: 0.3rem;
+      }
+      .search-field {
+        margin-bottom: 1.4rem;
+      }
+      .search-field input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid var(--void-line);
+        color: var(--white);
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 1.2rem;
+        padding: 0.4rem 0.1rem 0.8rem;
+        transition: border-color 0.15s ease;
+      }
+      .search-field input::placeholder {
+        color: var(--fog-dim);
+        opacity: 1;
+      }
+      .search-field input:focus {
+        border-bottom-color: var(--cyan);
+        outline: none;
+      }
+
+      .chip-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+      }
+      .chip {
+        font-family: var(--font-mono);
+        font-size: 0.76rem;
+        padding: 0.5rem 0.95rem;
+        border: 1px solid var(--void-line);
+        border-radius: 999px;
+        cursor: pointer;
+        background: none;
+        color: var(--fog);
+        transition: all 0.15s ease;
+        user-select: none;
+      }
+      .chip:hover {
+        border-color: var(--slate);
+        color: var(--powder);
+      }
+      .chip.active {
+        background: var(--cyan);
+        border-color: var(--cyan);
+        color: var(--void);
+      }
+
+      .status-line {
+        font-family: var(--font-mono);
+        font-size: 0.76rem;
+        color: var(--fog-dim);
+        margin: 1.8rem 0 1.2rem;
+        padding-top: 1.4rem;
+        border-top: 1px solid var(--void-line);
+      }
+      .status-line .demo-flag {
+        color: var(--cyan);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1px;
+        background: var(--void-line);
+        border: 1px solid var(--void-line);
+      }
+      .card {
+        background: var(--void);
+        padding: 1.3rem 1.3rem 1.4rem;
+        display: flex;
+        flex-direction: column;
+        border-top: 2px solid var(--cyan-dim);
+        transition:
+          border-color 0.15s ease,
+          background 0.15s ease;
+      }
+      .card:hover {
+        border-top-color: var(--cyan);
+        background: var(--void-raised);
+      }
+      .card-tag {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        color: var(--cyan);
+        margin-bottom: 0.7rem;
+        letter-spacing: 0.02em;
+      }
+      .card h3 {
+        font-family: var(--font-serif);
+        font-weight: 500;
+        font-size: 1.05rem;
+        line-height: 1.35;
+        margin: 0 0 0.6rem;
+        color: var(--white);
+      }
+      .card p {
+        font-size: 0.85rem;
+        color: var(--fog);
+        line-height: 1.55;
+        margin: 0 0 1rem;
+        flex: 1;
+      }
+      .card-meta {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--fog-dim);
+        display: flex;
+        justify-content: space-between;
+        gap: 0.8rem;
+        border-top: 1px solid var(--void-line);
+        padding-top: 0.75rem;
+        margin-top: auto;
+      }
+      .card a.view-link {
+        display: inline-block;
+        margin-top: 0.8rem;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        color: var(--cyan);
+        text-decoration: none;
+      }
+      .card a.view-link:hover {
+        color: var(--cyan-bright);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 4rem 1rem;
+        color: var(--fog);
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 1.05rem;
+      }
+
+      footer.site {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 2.2rem 1.75rem 3rem;
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        color: var(--fog-dim);
+        border-top: 1px solid var(--void-line);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="masthead-row frame">
+        <a class="wordmark" href="index.html">Odyssey</a>
+        <span class="portal-tag">Polar Science Archive · NCPOR</span>
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="frame">
+        <p class="kicker">Ministry of Earth Sciences</p>
+        <h1>
+          Expedition reports, datasets and media from India's polar and ocean
+          research
+        </h1>
+        <p>
+          Search the archive by content type, station or keyword. Records are
+          added by NCPOR after each expedition and institutional activity.
+        </p>
+      </div>
+    </div>
+
+    <main class="frame">
+      <div class="controls">
+        <div class="search-field">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by title, station or keyword…"
+          />
+        </div>
+        <div class="chip-group" id="chipGroup">
+          <span class="chip active" data-cat="All">All</span>
+          <span class="chip" data-cat="Report">Reports</span>
+          <span class="chip" data-cat="Dataset">Datasets</span>
+          <span class="chip" data-cat="Publication">Publications</span>
+          <span class="chip" data-cat="Photo">Photos</span>
+          <span class="chip" data-cat="Video">Videos</span>
+          <span class="chip" data-cat="Activity">Activities</span>
+        </div>
+      </div>
+
+      <div class="status-line" id="statusLine">Loading archive…</div>
+      <div class="grid" id="grid"></div>
+    </main>
+
+    <footer class="site">
+      Maintained by NCPOR for public and institutional use.
+    </footer>
+
+    <script>
+      // Update this to your backend's real listing endpoint once available.
+      const LIST_ENDPOINT = "https://odyssey-org.onrender.com/files";
+
+      // Sample records shown only if the backend listing endpoint isn't reachable yet.
+      const DEMO_RECORDS = [
+        {
+          title: "41st Indian Antarctic Expedition — Summer Report",
+          category: "Report",
+          location: "Bharati, Antarctica",
+          date: "2024-02-10",
+          description:
+            "Field summary covering glaciology, atmospheric science and logistics for the 2023–24 summer season.",
+        },
+        {
+          title: "Ross Sea CTD Cast Data, 2023",
+          category: "Dataset",
+          location: "Ross Sea, Antarctica",
+          date: "2023-12-18",
+          description:
+            "Conductivity-temperature-depth profiles collected during the Southern Ocean expedition leg.",
+        },
+        {
+          title: "Mass balance of Himalayan glaciers 2015–2023",
+          category: "Publication",
+          location: "Western Himalaya",
+          date: "2023-09-02",
+          description:
+            "Peer-reviewed study on glacier retreat trends using satellite and in-situ measurements.",
+        },
+        {
+          title: "Icebreaker departure, Cape Town",
+          category: "Photo",
+          location: "Cape Town, South Africa",
+          date: "2024-01-05",
+          description:
+            "Departure of the resupply vessel ahead of the summer expedition.",
+        },
+        {
+          title: "Installing the automatic weather station",
+          category: "Video",
+          location: "Maitri, Antarctica",
+          date: "2023-12-22",
+          description: "Field team setting up an AWS unit near Maitri station.",
+        },
+        {
+          title: "World Polar Day outreach event",
+          category: "Activity",
+          location: "NCPOR, Goa",
+          date: "2024-04-18",
+          description:
+            "Public exhibition and school outreach programme marking World Polar Day.",
+        },
+      ];
+
+      let allRecords = [];
+      let activeCategory = "All";
+      let searchTerm = "";
+      let usingDemoData = false;
+
+      const grid = document.getElementById("grid");
+      const statusLine = document.getElementById("statusLine");
+      const searchInput = document.getElementById("searchInput");
+      const chipGroup = document.getElementById("chipGroup");
+
+      // Pick up a search term passed from the landing page (?q=...)
+      const params = new URLSearchParams(window.location.search);
+      const initialQuery = params.get("q");
+      if (initialQuery) {
+        searchInput.value = initialQuery;
+        searchTerm = initialQuery.trim().toLowerCase();
+      }
+
+      async function loadRecords() {
+        try {
+          const res = await fetch(LIST_ENDPOINT);
+          if (!res.ok) throw new Error("status " + res.status);
+          const data = await res.json();
+          const records = Array.isArray(data)
+            ? data
+            : Array.isArray(data.items)
+              ? data.items
+              : null;
+          if (!records || !records.length)
+            throw new Error("empty or unrecognised response");
+          allRecords = records.map(normaliseRecord);
+          usingDemoData = false;
+        } catch (err) {
+          console.warn(
+            "Could not load live archive, showing sample records:",
+            err.message,
+          );
+          allRecords = DEMO_RECORDS;
+          usingDemoData = true;
+        }
+        render();
+      }
+
+      function normaliseRecord(r) {
+        return {
+          title: r.title || r.name || "Untitled record",
+          category: r.category || "Report",
+          location: r.location || r.station || "",
+          date: r.date || "",
+          description: r.description || "",
+          url: r.url || r.fileUrl || r.link || null,
+        };
+      }
+
+      function render() {
+        const filtered = allRecords.filter((r) => {
+          const matchesCategory =
+            activeCategory === "All" || r.category === activeCategory;
+          const haystack = (
+            r.title +
+            " " +
+            r.location +
+            " " +
+            r.description
+          ).toLowerCase();
+          const matchesSearch = !searchTerm || haystack.includes(searchTerm);
+          return matchesCategory && matchesSearch;
+        });
+
+        statusLine.innerHTML = usingDemoData
+          ? `<span class="demo-flag">Sample data</span> — connect ${LIST_ENDPOINT} to a live listing endpoint · ${filtered.length} shown`
+          : `${filtered.length} record${filtered.length === 1 ? "" : "s"} found`;
+
+        grid.innerHTML = "";
+
+        if (!filtered.length) {
+          grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">Nothing matches that search. Try a different keyword or category.</div>`;
+          return;
+        }
+
+        filtered.forEach((r) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+      <span class="card-tag">${r.category.toUpperCase()}</span>
+      <h3>${escapeHtml(r.title)}</h3>
+      <p>${escapeHtml(r.description || "No description provided.")}</p>
+      <div class="card-meta">
+        <span>${escapeHtml(r.location || "—")}</span>
+        <span>${escapeHtml(r.date || "—")}</span>
+      </div>
+      ${r.url ? `<a class="view-link" href="${r.url}" target="_blank" rel="noopener">View record →</a>` : ""}`;
+          grid.appendChild(card);
+        });
+      }
+
+      function escapeHtml(str) {
+        const div = document.createElement("div");
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      searchInput.addEventListener("input", () => {
+        searchTerm = searchInput.value.trim().toLowerCase();
+        render();
+      });
+
+      chipGroup.addEventListener("click", (e) => {
+        if (!e.target.classList.contains("chip")) return;
+        chipGroup
+          .querySelectorAll(".chip")
+          .forEach((c) => c.classList.remove("active"));
+        e.target.classList.add("active");
+        activeCategory = e.target.dataset.cat;
+        render();
+      });
+
+      loadRecords();
+    </script>
+  </body>
+</html>
