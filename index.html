@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odyssey — Polar Research Outreach Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --void: #070b0d;
+        --void-raised: #0d1519;
+        --void-line: #182428;
+        --cyan: #3ecbdb;
+        --cyan-bright: #8be9f2;
+        --cyan-dim: #1f4d54;
+        --white: #eef7f8;
+        --paper: #dfeef0;
+        --powder: #a9c9d6;
+        --slate: #5c7a99;
+        --fog: #86a0a6;
+        --fog-dim: #4c6167;
+        --font-serif: "Source Serif 4", serif;
+        --font-sans: "Inter", sans-serif;
+        --font-mono: "IBM Plex Mono", monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--void);
+        color: var(--paper);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: inherit;
+      }
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible {
+        outline: 1.5px solid var(--cyan);
+        outline-offset: 3px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          transition: none !important;
+        }
+      }
+
+      .contour-bg {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .contour-bg path {
+        fill: none;
+        stroke: var(--cyan-dim);
+        stroke-width: 1;
+      }
+      .contour-bg .c1 {
+        opacity: 0.55;
+      }
+      .contour-bg .c2 {
+        opacity: 0.4;
+      }
+      .contour-bg .c3 {
+        opacity: 0.28;
+      }
+      .contour-bg .c4 {
+        opacity: 0.16;
+      }
+      .contour-bg .c5 {
+        opacity: 0.09;
+      }
+
+      .frame {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 1.75rem;
+      }
+
+      .masthead {
+        border-bottom: 1px solid var(--void-line);
+        padding: 1.6rem 0 1.4rem;
+      }
+      .masthead-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.4rem 1.2rem;
+      }
+      .wordmark {
+        font-family: var(--font-serif);
+        font-weight: 600;
+        font-size: 1.3rem;
+        letter-spacing: 0.01em;
+        color: var(--white);
+      }
+      .masthead-right {
+        display: flex;
+        align-items: baseline;
+        gap: 1.6rem;
+      }
+      .portal-tag {
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--fog);
+      }
+      .nav-link {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        color: var(--cyan);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+      .nav-link:hover {
+        border-bottom-color: var(--cyan);
+        color: var(--cyan-bright);
+      }
+
+      .cover {
+        padding: 4.4rem 0 3.6rem;
+      }
+      .cover .kicker {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        color: var(--cyan);
+        margin: 0 0 1.6rem;
+        max-width: 46ch;
+        line-height: 1.5;
+      }
+      .cover h1 {
+        font-family: var(--font-serif);
+        font-weight: 500;
+        font-size: clamp(2.1rem, 4.6vw, 3.15rem);
+        line-height: 1.22;
+        letter-spacing: -0.01em;
+        margin: 0 0 1.5rem;
+        max-width: 21ch;
+        color: var(--white);
+      }
+      .cover .lede {
+        font-size: 1.02rem;
+        line-height: 1.7;
+        color: var(--fog);
+        max-width: 58ch;
+        margin: 0 0 3rem;
+      }
+
+      /* search */
+      .search-panel {
+        margin-bottom: 0.5rem;
+      }
+      .search-panel .label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--fog-dim);
+        margin-bottom: 0.7rem;
+      }
+      form.search-form {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        gap: 1.2rem;
+      }
+      .search-field {
+        flex: 1 1 380px;
+        position: relative;
+      }
+      .search-field input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid var(--void-line);
+        color: var(--white);
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 1.35rem;
+        padding: 0.5rem 0.1rem 0.9rem;
+        transition: border-color 0.15s ease;
+      }
+      .search-field input::placeholder {
+        color: var(--fog-dim);
+        opacity: 1;
+      }
+      .search-field input:focus {
+        border-bottom-color: var(--cyan);
+        outline: none;
+      }
+      .search-submit {
+        flex: 0 0 auto;
+        background: none;
+        border: 1px solid var(--cyan-dim);
+        color: var(--cyan-bright);
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        padding: 0.85rem 1.4rem;
+        border-radius: 2px;
+        cursor: pointer;
+        transition:
+          border-color 0.15s ease,
+          background 0.15s ease,
+          color 0.15s ease;
+        margin-bottom: 2px;
+      }
+      .search-submit:hover {
+        border-color: var(--cyan);
+        background: rgba(62, 203, 219, 0.07);
+        color: var(--cyan);
+      }
+
+      /* process line */
+      .process {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 0;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        color: var(--fog-dim);
+        margin-top: 3.2rem;
+      }
+      .process span.step {
+        color: var(--powder);
+      }
+      .process span.arrow {
+        color: var(--fog-dim);
+        margin: 0 0.65rem;
+      }
+
+      section.block {
+        border-top: 1px solid var(--void-line);
+        padding: 3.4rem 0;
+      }
+      .block-head {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.1rem 3rem;
+        margin-bottom: 2.2rem;
+      }
+      @media (min-width: 680px) {
+        .block-head {
+          grid-template-columns: 0.9fr 1.6fr;
+          align-items: baseline;
+        }
+      }
+      .block-head h2 {
+        font-family: var(--font-serif);
+        font-weight: 500;
+        font-size: 1.55rem;
+        color: var(--white);
+        margin: 0;
+        line-height: 1.3;
+      }
+      .block-head p {
+        font-size: 0.96rem;
+        line-height: 1.7;
+        color: var(--fog);
+        margin: 0;
+        max-width: 54ch;
+      }
+
+      .duo {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2.2rem;
+      }
+      @media (min-width: 680px) {
+        .duo {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .duo-item {
+        border-left: 1px solid var(--void-line);
+        padding-left: 1.3rem;
+      }
+      .duo-item h3 {
+        font-family: var(--font-serif);
+        font-weight: 500;
+        font-style: italic;
+        font-size: 1.15rem;
+        color: var(--cyan-bright);
+        margin: 0 0 0.6rem;
+      }
+      .duo-item p {
+        font-size: 0.92rem;
+        line-height: 1.65;
+        color: var(--fog);
+        margin: 0;
+      }
+
+      .entity-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      @media (min-width: 680px) {
+        .entity-list {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .entity-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 1.5rem;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid var(--void-line);
+      }
+      .entity-row .term {
+        font-family: var(--font-serif);
+        font-size: 0.98rem;
+        color: var(--paper);
+        white-space: nowrap;
+      }
+      .entity-row .def {
+        font-size: 0.82rem;
+        color: var(--fog-dim);
+        text-align: right;
+      }
+
+      .pullquote {
+        border-top: 1px solid var(--void-line);
+        padding: 4rem 0;
+        text-align: center;
+      }
+      .pullquote p {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-weight: 500;
+        font-size: clamp(1.3rem, 3vw, 1.7rem);
+        line-height: 1.55;
+        color: var(--white);
+        max-width: 40ch;
+        margin: 0 auto;
+      }
+
+      .cta-block {
+        border-top: 1px solid var(--void-line);
+        padding: 3.6rem 0 4.2rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.4rem;
+      }
+      .cta-block p {
+        font-family: var(--font-serif);
+        font-size: 1.2rem;
+        color: var(--white);
+        margin: 0;
+        max-width: 32ch;
+      }
+      .cta-button {
+        display: inline-block;
+        text-decoration: none;
+        background: var(--cyan);
+        color: var(--void);
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 0.9rem 1.6rem;
+        border-radius: 2px;
+        transition: background 0.15s ease;
+      }
+      .cta-button:hover {
+        background: var(--cyan-bright);
+      }
+
+      footer.site {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2.2rem 1.75rem 3rem;
+        font-family: var(--font-mono);
+        font-size: 0.74rem;
+        color: var(--fog-dim);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      class="contour-bg"
+      viewBox="0 0 1600 1000"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+    >
+      <g transform="translate(1180,150)">
+        <path
+          class="c1"
+          d="M0,140 C-14,78 34,18 116,8 C204,-3 278,42 300,112 C322,182 280,252 198,272 C114,292 12,240 0,140 Z"
+        />
+        <path
+          class="c2"
+          d="M-42,150 C-60,66 16,-14 128,-28 C246,-42 338,16 364,108 C390,200 336,286 232,310 C124,335 -22,246 -42,150 Z"
+        />
+        <path
+          class="c3"
+          d="M-90,162 C-114,52 0,-48 144,-68 C294,-90 406,-12 436,102 C468,216 400,322 270,352 C136,384 -62,276 -90,162 Z"
+        />
+        <path
+          class="c4"
+          d="M-142,178 C-172,40 -18,-88 168,-114 C358,-140 492,-46 528,92 C566,232 476,360 320,396 C158,432 -108,304 -142,178 Z"
+        />
+        <path
+          class="c5"
+          d="M-198,196 C-234,26 -38,-132 196,-164 C428,-196 590,-84 632,80 C676,254 566,404 380,446 C186,490 -156,336 -198,196 Z"
+        />
+      </g>
+      <g transform="translate(140,880) scale(0.85)">
+        <path
+          class="c1"
+          d="M0,140 C-14,78 34,18 116,8 C204,-3 278,42 300,112 C322,182 280,252 198,272 C114,292 12,240 0,140 Z"
+        />
+        <path
+          class="c2"
+          d="M-42,150 C-60,66 16,-14 128,-28 C246,-42 338,16 364,108 C390,200 336,286 232,310 C124,335 -22,246 -42,150 Z"
+        />
+        <path
+          class="c3"
+          d="M-90,162 C-114,52 0,-48 144,-68 C294,-90 406,-12 436,102 C468,216 400,322 270,352 C136,384 -62,276 -90,162 Z"
+        />
+        <path
+          class="c4"
+          d="M-142,178 C-172,40 -18,-88 168,-114 C358,-140 492,-46 528,92 C566,232 476,360 320,396 C158,432 -108,304 -142,178 Z"
+        />
+      </g>
+    </svg>
+
+    <div class="masthead frame">
+      <div class="masthead-row">
+        <span class="wordmark">Odyssey</span>
+        <div class="masthead-right">
+          <span class="portal-tag">Polar Research Outreach Portal</span>
+          <a class="nav-link" href="viewer.html">Archive</a>
+        </div>
+      </div>
+    </div>
+
+    <main class="cover frame">
+      <p class="kicker">
+        National Centre for Polar and Ocean Research — Ministry of Earth
+        Sciences
+      </p>
+      <h1>Scattered research, held together as one living archive.</h1>
+      <p class="lede">
+        Expedition reports, datasets, publications, photographs and video from
+        India's polar and ocean research programmes are usually spread across
+        drives, drawers and departments. Odyssey brings all of it into one
+        connected record, so it can be found, understood and reused — by
+        researchers and by the public.
+      </p>
+
+      <div class="search-panel">
+        <span class="label">Search the archive</span>
+        <form class="search-form" action="viewer.html" method="get">
+          <div class="search-field">
+            <input
+              type="text"
+              name="q"
+              placeholder="a station, an expedition, a researcher, a year…"
+              autocomplete="off"
+            />
+          </div>
+          <button class="search-submit" type="submit">Search Archives</button>
+        </form>
+      </div>
+
+      <div class="process">
+        <span class="step">Research</span><span class="arrow">→</span>
+        <span class="step">Organize</span><span class="arrow">→</span>
+        <span class="step">Connect</span><span class="arrow">→</span>
+        <span class="step">Discover</span><span class="arrow">→</span>
+        <span class="step">Communicate</span>
+      </div>
+    </main>
+
+    <section class="block frame">
+      <div class="block-head">
+        <h2>Two things, done well</h2>
+        <p>
+          Instead of treating every file as an island, Odyssey does two simple
+          things with everything it holds.
+        </p>
+      </div>
+      <div class="duo">
+        <div class="duo-item">
+          <h3>Easy to discover</h3>
+          <p>
+            Researchers, expeditions, datasets, publications, photographs and
+            activities are organized and linked to one another, so a single
+            record opens onto its full context instead of standing alone.
+          </p>
+        </div>
+        <div class="duo-item">
+          <h3>Easy to communicate</h3>
+          <p>
+            An authoritative research report can be turned into a
+            reader-friendly article, social posts and visual content — drafted
+            from the source material, and reviewed by staff before anything is
+            published.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block frame">
+      <div class="block-head">
+        <h2>What the archive holds</h2>
+        <p>
+          Every record becomes a structured entity, connected to the
+          expeditions, people and places it belongs to.
+        </p>
+      </div>
+      <div class="entity-list">
+        <div class="entity-row">
+          <span class="term">Publications</span
+          ><span class="def">peer-reviewed research</span>
+        </div>
+        <div class="entity-row">
+          <span class="term">Expeditions</span
+          ><span class="def">field campaigns and seasons</span>
+        </div>
+        <div class="entity-row">
+          <span class="term">Datasets</span
+          ><span class="def">measurements and observations</span>
+        </div>
+        <div class="entity-row">
+          <span class="term">Researchers</span
+          ><span class="def">the people behind the work</span>
+        </div>
+        <div class="entity-row">
+          <span class="term">Reports</span
+          ><span class="def">expedition and station summaries</span>
+        </div>
+        <div class="entity-row">
+          <span class="term">Photographs</span
+          ><span class="def">the field, documented</span>
+        </div>
+        <div class="entity-row">
+          <span class="term">Videos</span
+          ><span class="def">footage from stations and sea</span>
+        </div>
+        <div class="entity-row">
+          <span class="term">Activities</span
+          ><span class="def">outreach and institutional events</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="pullquote frame">
+      <p>
+        Preserve knowledge. Connect knowledge. Discover knowledge. Communicate
+        knowledge.
+      </p>
+    </div>
+
+    <section class="cta-block frame">
+      <p>Begin with a station, a season, or a single name.</p>
+      <a class="cta-button" href="viewer.html">Enter the Archive</a>
+    </section>
+
+    <footer class="site frame">
+      <span>Maintained by NCPOR for public and institutional use.</span>
+      <span>Odyssey</span>
+    </footer>
+  </body>
+</html>
