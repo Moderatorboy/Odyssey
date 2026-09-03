@@ -9,7 +9,7 @@
     <link
       rel="icon"
       type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%233ecbdb' stroke-width='10' fill='none'/%3E%3Ccircle cx='50' cy='50' r='15' fill='%233ecbdb'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' stroke='%233ecbdb' stroke-width='10' fill='none'/%3E%3Ccircle cx='100' cy='50' r='15' fill='%233ecbdb'/%3E%3C/svg%3E"
     />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -75,26 +75,42 @@
         height: 100%;
         z-index: 0;
         pointer-events: none;
+        filter: drop-shadow(0 0 5px rgba(62, 203, 219, 0.2));
       }
       .contour-bg path {
         fill: none;
-        stroke: var(--cyan-dim);
+        stroke: var(--cyan);
         stroke-width: 1;
+        stroke-dasharray: 14 22;
+        animation: contour-drift 18s linear infinite;
       }
       .contour-bg .c1 {
-        opacity: 0.55;
+        opacity: 0.72;
+        animation-duration: 14s;
       }
       .contour-bg .c2 {
-        opacity: 0.4;
+        opacity: 0.54;
+        animation-duration: 18s;
       }
       .contour-bg .c3 {
-        opacity: 0.28;
+        opacity: 0.4;
+        animation-duration: 22s;
       }
       .contour-bg .c4 {
-        opacity: 0.16;
+        opacity: 0.26;
+        animation-duration: 26s;
       }
       .contour-bg .c5 {
-        opacity: 0.09;
+        opacity: 0.15;
+        animation-duration: 30s;
+      }
+      @keyframes contour-drift {
+        from {
+          stroke-dashoffset: 0;
+        }
+        to {
+          stroke-dashoffset: -72;
+        }
       }
 
       .frame {
@@ -117,26 +133,13 @@
         flex-wrap: wrap;
         gap: 0.4rem 1.2rem;
       }
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.7rem;
-        min-width: 0;
-      }
-      .brand-logo {
-        width: 2.35rem;
-        height: 2.35rem;
-        flex: 0 0 2.35rem;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 1px solid var(--cyan-dim);
-      }
       .wordmark {
         font-family: var(--font-serif);
         font-weight: 600;
         font-size: 1.3rem;
         letter-spacing: 0.01em;
         color: var(--white);
+        text-decoration: none;
       }
       .masthead-right {
         display: flex;
@@ -588,6 +591,11 @@
           padding-right: 1rem;
         }
       }
+      @media (prefers-reduced-motion: reduce) {
+        .contour-bg path {
+          animation: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -598,6 +606,16 @@
       aria-hidden="true"
     >
       <g transform="translate(1180,150)">
+        <animateTransform
+          class="contour-motion"
+          attributeName="transform"
+          type="rotate"
+          additive="sum"
+          from="0 150 140"
+          to="360 150 140"
+          dur="32s"
+          repeatCount="indefinite"
+        />
         <path
           class="c1"
           d="M0,140 C-14,78 34,18 116,8 C204,-3 278,42 300,112 C322,182 280,252 198,272 C114,292 12,240 0,140 Z"
@@ -620,6 +638,16 @@
         />
       </g>
       <g transform="translate(140,880) scale(0.85)">
+        <animateTransform
+          class="contour-motion"
+          attributeName="transform"
+          type="rotate"
+          additive="sum"
+          from="360 150 140"
+          to="0 150 140"
+          dur="42s"
+          repeatCount="indefinite"
+        />
         <path
           class="c1"
           d="M0,140 C-14,78 34,18 116,8 C204,-3 278,42 300,112 C322,182 280,252 198,272 C114,292 12,240 0,140 Z"
@@ -639,15 +667,12 @@
       </g>
     </svg>
 
-    <div class="masthead frame">
-      <div class="masthead-row">
-        <a class="brand" href="index.html" aria-label="Odyssey home">
-          <img class="brand-logo" src="logo.png" alt="" />
-          <span class="wordmark">Odyssey</span>
-        </a>
+    <div class="masthead">
+      <div class="masthead-row frame">
+        <a class="wordmark" href="index.html">Odyssey</a>
         <div class="masthead-right">
           <span class="portal-tag">Polar Research Outreach Portal</span>
-          <a class="nav-link" href="viewer.html">Archive</a>
+          <a class="nav-link" href="archive.html">Archive</a>
           <button
             class="theme-toggle"
             type="button"
@@ -676,12 +701,12 @@
 
       <div class="search-panel">
         <span class="label">Search the archive</span>
-        <form class="search-form" action="viewer.html" method="get">
+        <form class="search-form" action="archive.html" method="get">
           <div class="search-field">
             <input
               type="text"
               name="q"
-              placeholder="a station, an expedition, a researcher, a year…"
+              placeholder="an expedition, a research, a report, an article..."
               autocomplete="off"
             />
           </div>
@@ -781,8 +806,8 @@
           class="team-member"
           type="button"
           data-name="Yashasvi Yadav"
-          data-email="yashasvi.yadav@odyssey.org"
-          data-photo="https://i.pravatar.cc/240?img=47"
+          data-email="yashasvi.coder@outlook.com"
+          data-photo="/photos/yashasvi.png"
         >
           Yashasvi Yadav
         </button>
@@ -790,8 +815,8 @@
           class="team-member"
           type="button"
           data-name="Bittu Kumar"
-          data-email="bittu.kumar@odyssey.org"
-          data-photo="https://i.pravatar.cc/240?img=12"
+          data-email="contactb2gpt@gmail.com"
+          data-photo="/photos/bittu.png"
         >
           Bittu Kumar
         </button>
@@ -799,8 +824,8 @@
           class="team-member"
           type="button"
           data-name="Suryansh Kumar"
-          data-email="suryansh.kumar@odyssey.org"
-          data-photo="https://i.pravatar.cc/240?img=33"
+          data-email="suryanshkumar9955@gmail.com"
+          data-photo="/photos/suryansh.png"
         >
           Suryansh Kumar
         </button>
@@ -808,8 +833,8 @@
           class="team-member"
           type="button"
           data-name="Ragni Singh"
-          data-email="ragni.singh@odyssey.org"
-          data-photo="https://i.pravatar.cc/240?img=44"
+          data-email="ragnisinghragni229@gmail.com"
+          data-photo="/photos/ragni.png"
         >
           Ragni Singh
         </button>
@@ -817,8 +842,8 @@
           class="team-member"
           type="button"
           data-name="Lav Kumar Yadav"
-          data-email="lav.yadav@odyssey.org"
-          data-photo="https://i.pravatar.cc/240?img=68"
+          data-email="lavkumar8486@gmail.com"
+          data-photo="/photos/lav.png"
         >
           Lav Kumar Yadav
         </button>
@@ -826,8 +851,8 @@
           class="team-member"
           type="button"
           data-name="Shiwam Kumar"
-          data-email="shiwam.kumar@odyssey.org"
-          data-photo="https://i.pravatar.cc/240?img=53"
+          data-email="kumarshivamdss7781@gmail.com"
+          data-photo="/photos/shiwam.png"
         >
           Shiwam Kumar
         </button>
@@ -842,8 +867,8 @@
     </div>
 
     <section class="cta-block frame">
-      <p>Begin with a station, a season, or a single name.</p>
-      <a class="cta-button" href="viewer.html">Enter the Archive</a>
+      <p>Begin with an expedition, a report or a single name.</p>
+      <a class="cta-button" href="archive.html">Enter the Archive</a>
     </section>
 
     <footer class="site frame">
