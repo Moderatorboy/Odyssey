@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Odyssey — Polar Research Outreach Portal</title>
 
+    <!-- GOOGLE VERIFICATION TAG YAHAN DALEIN -->
+    <meta
+      name="google-site-verification"
+      content="R2HdHcgPhdOIUZ2GcT25ZnZGmH8sh_0wWWwhk-gkw0M"
+    />
+
+    <meta
+      name="description"
+      content="Explore India's polar and ocean research through expedition reports, datasets, publications, photographs and videos in the Odyssey research archive."
+    />
+
     <!-- Inline SVG Favicon (Cyan Radar/Compass) -->
     <link
       rel="icon"
@@ -16,6 +27,10 @@
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&display=swap"
       rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
     <style>
       :root {
@@ -254,24 +269,28 @@
       }
       .search-submit {
         flex: 0 0 auto;
-        background: none;
-        border: 1px solid var(--cyan-dim);
-        color: var(--cyan-bright);
+        background: var(--cyan);
+        border: 1px solid var(--cyan);
+        color: var(--void);
         font-family: var(--font-mono);
         font-size: 0.82rem;
+        font-weight: 500;
         padding: 0.85rem 1.4rem;
         border-radius: 2px;
         cursor: pointer;
         transition:
           border-color 0.15s ease,
           background 0.15s ease,
-          color 0.15s ease;
+          color 0.15s ease,
+          box-shadow 0.15s ease;
         margin-bottom: 2px;
+        box-shadow: 0 0 14px rgba(62, 203, 219, 0.2);
       }
       .search-submit:hover {
-        border-color: var(--cyan);
-        background: rgba(62, 203, 219, 0.07);
-        color: var(--cyan);
+        border-color: var(--cyan-bright);
+        background: var(--cyan-bright);
+        color: var(--void);
+        box-shadow: 0 0 20px rgba(62, 203, 219, 0.4);
       }
 
       /* process line */
@@ -407,6 +426,49 @@
         border-color: var(--cyan);
         color: var(--cyan-bright);
       }
+      .mentor-profile {
+        border: 1px solid var(--cyan-dim);
+        background: var(--void-raised);
+        padding: 1.5rem;
+        text-align: center;
+      }
+      .mentor-photo {
+        width: 9rem;
+        height: 9rem;
+        border: 1px solid var(--cyan);
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+      }
+      .mentor-profile h3 {
+        color: var(--white);
+        font-family: var(--font-serif);
+        font-size: 1.5rem;
+        font-weight: 500;
+        margin: 0 0 0.35rem;
+      }
+      .mentor-role {
+        color: var(--cyan-bright);
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        margin: 0 0 1rem;
+        text-transform: uppercase;
+      }
+      .mentor-links {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem 1.25rem;
+      }
+      .mentor-links a {
+        color: var(--powder);
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+      }
+      .mentor-links a:hover {
+        color: var(--cyan-bright);
+      }
       .profile-modal[hidden] {
         display: none;
       }
@@ -446,6 +508,35 @@
         color: var(--cyan-bright);
         font-family: var(--font-mono);
         font-size: 0.78rem;
+      }
+      .profile-socials {
+        display: none;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.25rem;
+      }
+      .profile-socials.is-visible {
+        display: flex;
+      }
+      .profile-socials a {
+        display: inline-grid;
+        place-items: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border: 1px solid var(--cyan-dim);
+        border-radius: 50%;
+        color: var(--cyan-bright);
+        font-size: 1rem;
+        text-decoration: none;
+        transition:
+          border-color 0.15s ease,
+          color 0.15s ease,
+          background 0.15s ease;
+      }
+      .profile-socials a:hover {
+        border-color: var(--cyan);
+        background: rgba(62, 203, 219, 0.08);
+        color: var(--cyan);
       }
       .modal-close {
         position: absolute;
@@ -796,6 +887,33 @@
       </div>
     </section>
 
+    <section class="block frame" aria-labelledby="mentor-title">
+      <div class="block-head">
+        <h2 id="mentor-title">Odyssey Mentor</h2>
+        <p>Guidance connecting polar research with the next generation.</p>
+      </div>
+      <div class="mentor-profile">
+        <img
+          class="mentor-photo"
+          src="photos/Pawansir.jpg"
+          alt="Pawan Kumar Mandal"
+        />
+        <h3>Pawan Kumar Mandal</h3>
+        <p class="mentor-role">Odyssey Mentor</p>
+        <div class="mentor-links">
+          <a href="tel:9031815781">9031815781</a>
+          <a href="mailto:pkmandal321@gmail.com">pkmandal321@gmail.com</a>
+          <a
+            href="https://www.linkedin.com/in/pawankumarmandal/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </section>
+
     <section class="block frame" aria-labelledby="team-title">
       <div class="block-head">
         <h2 id="team-title">Team Odyssey</h2>
@@ -817,6 +935,7 @@
           data-name="Bittu Kumar"
           data-email="contactb2gpt@gmail.com"
           data-photo="/photos/bittu.png"
+          data-socials="bittu"
         >
           Bittu Kumar
         </button>
@@ -852,7 +971,7 @@
           type="button"
           data-name="Shiwam Kumar"
           data-email="kumarshivamdss7781@gmail.com"
-          data-photo="/photos/shiwam.png"
+          data-photo="/photos/shiwam.jpeg"
         >
           Shiwam Kumar
         </button>
@@ -890,6 +1009,47 @@
         <img class="profile-photo" src="" alt="" />
         <h2 id="profile-name"></h2>
         <a class="profile-email" href=""></a>
+        <div class="profile-socials" aria-label="Bittu Kumar social links">
+          <a
+            href="https://github.com/b2gpt"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            title="GitHub"
+          >
+            <i class="fab fa-github" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://www.instagram.com/b2_gpt"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            title="Instagram"
+          >
+            <i class="fab fa-instagram" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/b2gpt/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            title="LinkedIn"
+          >
+            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://b2gpt.online"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="B2GPT website"
+            title="B2GPT website"
+          >
+            <i class="fas fa-globe" aria-hidden="true"></i>
+          </a>
+          <a href="tel:9341092981" aria-label="Call Bittu Kumar" title="Call">
+            <i class="fas fa-phone" aria-hidden="true"></i>
+          </a>
+        </div>
       </div>
     </div>
 
@@ -899,6 +1059,7 @@
       const profilePhoto = document.querySelector(".profile-photo");
       const profileName = document.querySelector("#profile-name");
       const profileEmail = document.querySelector(".profile-email");
+      const profileSocials = document.querySelector(".profile-socials");
 
       themeToggle.addEventListener("click", () => {
         const lightMode = document.body.classList.toggle("light");
@@ -916,6 +1077,10 @@
           profilePhoto.alt = member.dataset.name;
           profileEmail.textContent = member.dataset.email;
           profileEmail.href = `mailto:${member.dataset.email}`;
+          profileSocials.classList.toggle(
+            "is-visible",
+            member.dataset.socials === "bittu",
+          );
           profileModal.hidden = false;
         });
       });
