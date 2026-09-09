@@ -16,6 +16,8 @@
       content="Explore India's polar and ocean research through expedition reports, datasets, publications, photographs and videos in the Odyssey research archive."
     />
 
+    <link rel="canonical" href="https://i_know_don't_touch.com/index.html" />
+
     <!-- Inline SVG Favicon (Cyan Radar/Compass) -->
     <link
       rel="icon"
@@ -27,10 +29,6 @@
     <link
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;1,400&display=swap"
       rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
     <style>
       :root {
@@ -83,6 +81,21 @@
         }
       }
 
+      /* ---- crisp inline-SVG icons (replaces the blurry web-font glyphs) ---- */
+      .icon {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        flex-shrink: 0;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        shape-rendering: geometricPrecision;
+        vector-effect: non-scaling-stroke;
+      }
+
       .contour-bg {
         position: fixed;
         inset: 0;
@@ -132,7 +145,7 @@
         position: relative;
         z-index: 1;
         width: 100%;
-        max-width: 900px;
+        max-width: 1000px;
         margin: 0 auto;
         padding: 0 1.75rem;
       }
@@ -229,11 +242,19 @@
         margin-bottom: 0.5rem;
       }
       .search-panel .label {
-        display: block;
+        display: flex;
+        align-items: center;
         font-family: var(--font-mono);
         font-size: 0.72rem;
         color: var(--fog-dim);
         margin-bottom: 0.7rem;
+      }
+      .search-panel .label .search-icon {
+        margin-left: 0.5rem;
+        color: var(--cyan);
+        width: 0.9rem;
+        height: 0.9rem;
+        stroke-width: 2.1;
       }
       form.search-form {
         display: flex;
@@ -245,6 +266,12 @@
         flex: 1 1 380px;
         min-width: 0;
         position: relative;
+        border-radius: 3px;
+        animation: search-field-pulse 1.8s ease-out infinite;
+      }
+      .search-field:focus-within {
+        animation: none;
+        box-shadow: none;
       }
       .search-field input {
         width: 100%;
@@ -267,11 +294,22 @@
         border-bottom-color: var(--cyan);
         outline: none;
       }
+      @keyframes search-field-pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(62, 203, 219, 0.55);
+        }
+        70% {
+          box-shadow: 0 0 0 12px rgba(62, 203, 219, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(62, 203, 219, 0);
+        }
+      }
       .search-submit {
         flex: 0 0 auto;
-        background: var(--cyan);
+        background: transparent;
         border: 1px solid var(--cyan);
-        color: var(--void);
+        color: var(--cyan);
         font-family: var(--font-mono);
         font-size: 0.82rem;
         font-weight: 500;
@@ -284,13 +322,13 @@
           color 0.15s ease,
           box-shadow 0.15s ease;
         margin-bottom: 2px;
-        box-shadow: 0 0 14px rgba(62, 203, 219, 0.2);
+        box-shadow: 0 0 14px rgba(62, 203, 219, 0.12);
       }
       .search-submit:hover {
         border-color: var(--cyan-bright);
-        background: var(--cyan-bright);
-        color: var(--void);
-        box-shadow: 0 0 20px rgba(62, 203, 219, 0.4);
+        background: rgba(62, 203, 219, 0.08);
+        color: var(--cyan-bright);
+        box-shadow: 0 0 20px rgba(62, 203, 219, 0.3);
       }
 
       /* process line */
@@ -312,9 +350,112 @@
         margin: 0 0.65rem;
       }
 
+      /* ---- image slider (rebuilt: JS-driven crossfade, real <img> tags,
+             Ken Burns zoom, dot navigation, graceful handling of any image
+             that fails to load) ---- */
+      .polar-slider {
+        position: relative;
+        width: 100%;
+        height: 30vh;
+        min-height: 220px;
+        overflow: hidden;
+        border-top: 1px solid var(--void-line);
+        border-bottom: 1px solid var(--void-line);
+        background: var(--void-raised);
+      }
+      .polar-slide {
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: opacity 1.1s ease;
+      }
+      .polar-slide.is-active {
+        opacity: 1;
+        z-index: 1;
+      }
+      .polar-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transform: scale(1.06);
+        transition: transform 7s linear;
+      }
+      .polar-slide.is-active img {
+        transform: scale(1.14);
+      }
+      .polar-slide::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(3, 7, 9, 0.82) 0%,
+          rgba(3, 7, 9, 0.15) 55%,
+          rgba(3, 7, 9, 0.05) 100%
+        );
+      }
+      .polar-slide figcaption {
+        position: absolute;
+        left: 1.75rem;
+        bottom: 1.1rem;
+        z-index: 2;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--white);
+      }
+      .slider-dots {
+        position: absolute;
+        right: 1.5rem;
+        bottom: 1.1rem;
+        z-index: 2;
+        display: flex;
+        gap: 0.5rem;
+      }
+      .slider-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        padding: 0;
+        border-radius: 50%;
+        border: 1px solid var(--fog-dim);
+        background: transparent;
+        cursor: pointer;
+        opacity: 0.55;
+        transition:
+          opacity 0.2s ease,
+          background 0.2s ease,
+          transform 0.2s ease;
+      }
+      .slider-dot:hover {
+        opacity: 0.85;
+      }
+      .slider-dot[aria-selected="true"] {
+        background: var(--fog);
+        opacity: 1;
+        transform: scale(1.15);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .polar-slide img {
+          transition: none;
+        }
+        .polar-slide.is-active img {
+          transform: scale(1.06);
+        }
+      }
+
       section.block {
         border-top: 1px solid var(--void-line);
         padding: 3.4rem 0;
+      }
+      section.two-things {
+        min-height: 70vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
       .block-head {
         display: grid;
@@ -372,35 +513,75 @@
         color: var(--fog);
         margin: 0;
       }
-
-      .entity-list {
+      .duo-item-icon {
+        width: 2.5rem;
+        height: 2.5rem;
         display: grid;
-        grid-template-columns: 1fr;
-        gap: 0;
+        place-items: center;
+        border: 1px solid var(--cyan-dim);
+        border-radius: 50%;
+        color: var(--cyan-bright);
+        margin-bottom: 1rem;
       }
-      @media (min-width: 680px) {
-        .entity-list {
-          grid-template-columns: 1fr 1fr;
+      .duo-item-icon .icon {
+        width: 1.15rem;
+        height: 1.15rem;
+        stroke-width: 1.7;
+      }
+      .duo-item ul.duo-features {
+        list-style: none;
+        margin: 1.1rem 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .duo-item ul.duo-features li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.65rem;
+        font-size: 0.88rem;
+        line-height: 1.55;
+        color: var(--powder);
+      }
+      .duo-item ul.duo-features li .icon {
+        color: var(--cyan);
+        width: 0.75rem;
+        height: 0.75rem;
+        stroke-width: 2.4;
+        margin-top: 0.35rem;
+      }
+
+      /* ---- typewriter effect for the "Easy to discover" / "Easy to
+             communicate" paragraph + list items: loops continuously,
+             starting as soon as the page loads ---- */
+      .duo-item > p.tw-el,
+      .duo-item .duo-features li span.tw-el {
+        display: inline-block;
+        min-height: 1.1em;
+      }
+      .duo-item > p.tw-el::after,
+      .duo-item .duo-features li span.tw-el::after {
+        content: "";
+        display: inline-block;
+        width: 2px;
+        height: 1em;
+        background: var(--cyan);
+        margin-left: 2px;
+        vertical-align: -0.15em;
+        animation: tw-blink 0.85s steps(1) infinite;
+      }
+      @keyframes tw-blink {
+        50% {
+          opacity: 0;
         }
       }
-      .entity-row {
-        display: grid;
-        grid-template-columns: minmax(7rem, auto) minmax(0, 1fr);
-        align-items: baseline;
-        gap: 0.9rem;
-        padding: 0.85rem 0;
-        border-bottom: 1px solid var(--void-line);
-      }
-      .entity-row .term {
-        font-family: var(--font-serif);
-        font-size: 0.98rem;
-        color: var(--paper);
-        white-space: normal;
-      }
-      .entity-row .def {
-        font-size: 0.82rem;
-        color: var(--fog-dim);
-        text-align: left;
+      @media (prefers-reduced-motion: reduce) {
+        .duo-item > p.tw-el::after,
+        .duo-item .duo-features li span.tw-el::after {
+          animation: none;
+          opacity: 0;
+        }
       }
 
       .team-list {
@@ -526,12 +707,16 @@
         border: 1px solid var(--cyan-dim);
         border-radius: 50%;
         color: var(--cyan-bright);
-        font-size: 1rem;
         text-decoration: none;
         transition:
           border-color 0.15s ease,
           color 0.15s ease,
           background 0.15s ease;
+      }
+      .profile-socials a .icon {
+        width: 1rem;
+        height: 1rem;
+        stroke-width: 1.8;
       }
       .profile-socials a:hover {
         border-color: var(--cyan);
@@ -791,7 +976,13 @@
       </p>
 
       <div class="search-panel">
-        <span class="label">Search the archive</span>
+        <span class="label"
+          >Search the archive
+          <svg class="icon search-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </span>
         <form class="search-form" action="archive.html" method="get">
           <div class="search-field">
             <input
@@ -804,17 +995,65 @@
           <button class="search-submit" type="submit">Search Archives</button>
         </form>
       </div>
-
-      <div class="process">
-        <span class="step">Research</span><span class="arrow">→</span>
-        <span class="step">Organize</span><span class="arrow">→</span>
-        <span class="step">Connect</span><span class="arrow">→</span>
-        <span class="step">Discover</span><span class="arrow">→</span>
-        <span class="step">Communicate</span>
-      </div>
     </main>
 
-    <section class="block frame">
+    <section
+      class="polar-slider"
+      aria-label="Photographs from the polar and ocean research programme"
+    >
+      <!-- Slides are plain <img> elements (not CSS background-images) so a
+           failed load fires a real 'error' event we can react to, and the
+           JS below drives the crossfade instead of relying on fixed
+           animation-delay offsets. -->
+      <figure class="polar-slide" data-caption="Antarctica">
+        <img
+          src="photos/antarctica.png"
+          alt="Iceberg off the coast of Antarctica"
+          loading="eager"
+        />
+        <figcaption>Antarctica</figcaption>
+      </figure>
+      <figure class="polar-slide" data-caption="Wildlife">
+        <img
+          src="photos/wildlife.png"
+          alt="Emperor penguins on the ice"
+          loading="lazy"
+        />
+        <figcaption>Wildlife</figcaption>
+      </figure>
+      <figure class="polar-slide" data-caption="Arctic">
+        <img
+          src="photos/arctic.png"
+          alt="Polar bear in the Arctic"
+          loading="lazy"
+        />
+        <figcaption>Arctic</figcaption>
+      </figure>
+      <figure class="polar-slide" data-caption="Research Station">
+        <img
+          src="photos/station.png"
+          alt="Research station base"
+          loading="lazy"
+        />
+        <figcaption>Research Station</figcaption>
+      </figure>
+      <figure class="polar-slide" data-caption="Aurora">
+        <img
+          src="photos/aurora.png"
+          alt="Aurora Borealis over a polar landscape"
+          loading="lazy"
+        />
+        <figcaption>Aurora</figcaption>
+      </figure>
+
+      <div
+        class="slider-dots"
+        role="tablist"
+        aria-label="Choose a photograph"
+      ></div>
+    </section>
+
+    <section class="block frame two-things">
       <div class="block-head">
         <h2>Two things, done well</h2>
         <p>
@@ -824,14 +1063,61 @@
       </div>
       <div class="duo">
         <div class="duo-item">
+          <div class="duo-item-icon">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="6" r="3"></circle>
+              <circle cx="18" cy="18" r="3"></circle>
+              <line x1="8.6" y1="10.6" x2="15.4" y2="7.4"></line>
+              <line x1="8.6" y1="13.4" x2="15.4" y2="16.6"></line>
+            </svg>
+          </div>
           <h3>Easy to discover</h3>
           <p>
             Researchers, expeditions, datasets, publications, photographs and
             activities are organized and linked to one another, so a single
             record opens onto its full context instead of standing alone.
           </p>
+          <ul class="duo-features">
+            <li>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span
+                >Search across expeditions, researchers, datasets and reports
+                from one search bar</span
+              >
+            </li>
+            <li>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span
+                >Open any record and see everything connected to it — the
+                expedition it came from, the people involved, the data it
+                produced</span
+              >
+            </li>
+            <li>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span
+                >Browse by researcher, season or station instead of digging
+                through folders</span
+              >
+            </li>
+          </ul>
         </div>
         <div class="duo-item">
+          <div class="duo-item-icon">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M3 10v4a1 1 0 0 0 1 1h2l1.2 4.2h2L8 15h1l9 4V5l-9 4H4a1 1 0 0 0-1 1Z"
+              ></path>
+              <path d="M17.5 9a4 4 0 0 1 0 6"></path>
+            </svg>
+          </div>
           <h3>Easy to communicate</h3>
           <p>
             An authoritative research report can be turned into a
@@ -839,51 +1125,44 @@
             from the source material, and reviewed by staff before anything is
             published.
           </p>
+          <ul class="duo-features">
+            <li>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span
+                >Get a plain-language summary of a dense research paper, ready
+                for a general reader</span
+              >
+            </li>
+            <li>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span
+                >Generate ready-to-edit social media posts straight from a
+                report or dataset</span
+              >
+            </li>
+            <li>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span
+                >Every auto-drafted summary or post is reviewed by staff before
+                it goes public</span
+              >
+            </li>
+          </ul>
         </div>
       </div>
-    </section>
 
-    <section class="block frame">
-      <div class="block-head">
-        <h2>What the archive holds</h2>
-        <p>
-          Every record becomes a structured entity, connected to the
-          expeditions, people and places it belongs to.
-        </p>
-      </div>
-      <div class="entity-list">
-        <div class="entity-row">
-          <span class="term">Publications</span
-          ><span class="def">peer-reviewed research</span>
-        </div>
-        <div class="entity-row">
-          <span class="term">Expeditions</span
-          ><span class="def">field campaigns and seasons</span>
-        </div>
-        <div class="entity-row">
-          <span class="term">Datasets</span
-          ><span class="def">measurements and observations</span>
-        </div>
-        <div class="entity-row">
-          <span class="term">Researchers</span
-          ><span class="def">the people behind the work</span>
-        </div>
-        <div class="entity-row">
-          <span class="term">Reports</span
-          ><span class="def">expedition and station summaries</span>
-        </div>
-        <div class="entity-row">
-          <span class="term">Photographs</span
-          ><span class="def">the field, documented</span>
-        </div>
-        <div class="entity-row">
-          <span class="term">Videos</span
-          ><span class="def">footage from stations and sea</span>
-        </div>
-        <div class="entity-row">
-          <span class="term">Activities</span
-          ><span class="def">outreach and institutional events</span>
-        </div>
+      <div class="process">
+        <span class="step">Research</span><span class="arrow">→</span>
+        <span class="step">Organize</span><span class="arrow">→</span>
+        <span class="step">Connect</span><span class="arrow">→</span>
+        <span class="step">Discover</span><span class="arrow">→</span>
+        <span class="step">Communicate</span>
       </div>
     </section>
 
@@ -895,11 +1174,10 @@
       <div class="mentor-profile">
         <img
           class="mentor-photo"
-          src="photos/Pawansir.jpg"
+          src="photos/pawansir.jpg"
           alt="Pawan Kumar Mandal"
         />
         <h3>Pawan Kumar Mandal</h3>
-        <p class="mentor-role">Odyssey Mentor</p>
         <div class="mentor-links">
           <a href="tel:9031815781">9031815781</a>
           <a href="mailto:pkmandal321@gmail.com">pkmandal321@gmail.com</a>
@@ -925,7 +1203,8 @@
           type="button"
           data-name="Yashasvi Yadav"
           data-email="yashasvi.coder@outlook.com"
-          data-photo="/photos/Yashasvi.png"
+          data-photo="photos/Yashasvi.png"
+          data-socials="yashasvi"
         >
           Yashasvi Yadav
         </button>
@@ -934,7 +1213,7 @@
           type="button"
           data-name="Bittu Kumar"
           data-email="contactb2gpt@gmail.com"
-          data-photo="/photos/Bittu.png"
+          data-photo="photos/Bittu.png"
           data-socials="bittu"
         >
           Bittu Kumar
@@ -944,7 +1223,7 @@
           type="button"
           data-name="Suryansh Kumar"
           data-email="suryanshkumar9955@gmail.com"
-          data-photo="/photos/suryansh.png"
+          data-photo="photos/suryansh.jpeg"
         >
           Suryansh Kumar
         </button>
@@ -953,7 +1232,7 @@
           type="button"
           data-name="Ragni Singh"
           data-email="ragnisinghragni229@gmail.com"
-          data-photo="/photos/Ragni.png"
+          data-photo="photos/Ragni.png"
         >
           Ragni Singh
         </button>
@@ -962,7 +1241,7 @@
           type="button"
           data-name="Lav Kumar Yadav"
           data-email="lavkumar8486@gmail.com"
-          data-photo="/photos/lav.png"
+          data-photo="photos/lav.png"
         >
           Lav Kumar Yadav
         </button>
@@ -971,7 +1250,7 @@
           type="button"
           data-name="Shivam Kumar"
           data-email="kumarshivamdss7781@gmail.com"
-          data-photo="/photos/shiwam.jpeg"
+          data-photo="photos/shiwam.jpeg"
         >
           Shivam Kumar
         </button>
@@ -1009,7 +1288,11 @@
         <img class="profile-photo" src="" alt="" />
         <h2 id="profile-name"></h2>
         <a class="profile-email" href=""></a>
-        <div class="profile-socials" aria-label="Bittu Kumar social links">
+        <div
+          class="profile-socials"
+          data-socials-owner="bittu"
+          aria-label="Bittu Kumar social links"
+        >
           <a
             href="https://github.com/b2gpt"
             target="_blank"
@@ -1017,7 +1300,11 @@
             aria-label="GitHub"
             title="GitHub"
           >
-            <i class="fab fa-github" aria-hidden="true"></i>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.93 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.9-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.83-2.34 4.68-4.57 4.92.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"
+              ></path>
+            </svg>
           </a>
           <a
             href="https://www.instagram.com/b2_gpt"
@@ -1026,7 +1313,11 @@
             aria-label="Instagram"
             title="Instagram"
           >
-            <i class="fab fa-instagram" aria-hidden="true"></i>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+              <circle cx="12" cy="12" r="4"></circle>
+              <line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line>
+            </svg>
           </a>
           <a
             href="https://www.linkedin.com/in/b2gpt/"
@@ -1035,7 +1326,17 @@
             aria-label="LinkedIn"
             title="LinkedIn"
           >
-            <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3.5a1.96 1.96 0 1 0 0 3.92 1.96 1.96 0 0 0 0-3.92ZM20.44 20h-3.37v-6.06c0-1.45-.03-3.31-2.02-3.31-2.02 0-2.33 1.58-2.33 3.2V20H9.35V8.5h3.24v1.57h.05c.45-.86 1.56-1.77 3.21-1.77 3.43 0 4.06 2.26 4.06 5.2V20Z"
+              ></path>
+            </svg>
           </a>
           <a
             href="https://b2gpt.online"
@@ -1044,10 +1345,71 @@
             aria-label="B2GPT website"
             title="B2GPT website"
           >
-            <i class="fas fa-globe" aria-hidden="true"></i>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <path
+                d="M12 3c2.5 2.5 3.8 5.7 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.7-3.8-9s1.3-6.5 3.8-9Z"
+              ></path>
+            </svg>
           </a>
           <a href="tel:9341092981" aria-label="Call Bittu Kumar" title="Call">
-            <i class="fas fa-phone" aria-hidden="true"></i>
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.85 21 3 13.15 3 3.5a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.24 1.02L6.6 10.8Z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+        <div
+          class="profile-socials"
+          data-socials-owner="yashasvi"
+          aria-label="Yashasvi Yadav social links"
+        >
+          <a
+            href="https://github.com/yashasvi-yard"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            title="GitHub"
+          >
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.93 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.9-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.83-2.34 4.68-4.57 4.92.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"
+              ></path>
+            </svg>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/yashasvi_coder/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            title="LinkedIn"
+          >
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              stroke="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3.5a1.96 1.96 0 1 0 0 3.92 1.96 1.96 0 0 0 0-3.92ZM20.44 20h-3.37v-6.06c0-1.45-.03-3.31-2.02-3.31-2.02 0-2.33 1.58-2.33 3.2V20H9.35V8.5h3.24v1.57h.05c.45-.86 1.56-1.77 3.21-1.77 3.43 0 4.06 2.26 4.06 5.2V20Z"
+              ></path>
+            </svg>
+          </a>
+          <a
+            href="https://twitter.com/yashasvi_coder"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Twitter"
+            title="Twitter"
+          >
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M23.95 4.57a10 10 0 0 1-2.83.78 4.94 4.94 0 0 0 2.17-2.72 10.05 10.05 0 0 1-3.13 1.2 4.92 4.92 0 0 0-8.38 4.49A13.97 13.97 0 0 1 1.67 3.15a4.92 4.92 0 0 0 1.52 6.57 4.9 4.9 0 0 1-2.23-.62v.06a4.93 4.93 0 0 0 3.95 4.83 4.9 4.9 0 0 1-2.22.08 4.93 4.93 0 0 0 4.6 3.42A9.87 9.87 0 0 1 1.2 19.6a13.94 13.94 0 0 0 7.55 2.21c9.06 0 14.01-7.5 14.01-14.01l-.02-.64a10 10 0 0 0 2.46-2.59Z"
+              ></path>
+            </svg>
           </a>
         </div>
       </div>
@@ -1059,7 +1421,7 @@
       const profilePhoto = document.querySelector(".profile-photo");
       const profileName = document.querySelector("#profile-name");
       const profileEmail = document.querySelector(".profile-email");
-      const profileSocials = document.querySelector(".profile-socials");
+      const profileSocials = document.querySelectorAll(".profile-socials");
 
       themeToggle.addEventListener("click", () => {
         const lightMode = document.body.classList.toggle("light");
@@ -1077,10 +1439,12 @@
           profilePhoto.alt = member.dataset.name;
           profileEmail.textContent = member.dataset.email;
           profileEmail.href = `mailto:${member.dataset.email}`;
-          profileSocials.classList.toggle(
-            "is-visible",
-            member.dataset.socials === "bittu",
-          );
+          profileSocials.forEach((socials) => {
+            socials.classList.toggle(
+              "is-visible",
+              socials.dataset.socialsOwner === member.dataset.socials,
+            );
+          });
           profileModal.hidden = false;
         });
       });
@@ -1094,6 +1458,186 @@
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") profileModal.hidden = true;
       });
+
+      // ---- Image slider: JS-driven crossfade with graceful failure handling ----
+      (function () {
+        const slider = document.querySelector(".polar-slider");
+        const dotsHost = document.querySelector(".slider-dots");
+        let slides = Array.from(document.querySelectorAll(".polar-slide"));
+        if (!slider || slides.length === 0) return;
+
+        const AUTOPLAY_MS = 5000;
+        const broken = new Set();
+        let current = -1;
+        let timer = null;
+
+        // Build one dot per slide up front; if a slide's image later fails
+        // to load, we just skip it in rotation instead of ever showing a
+        // black frame.
+        const dots = slides.map((slide, i) => {
+          const dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = "slider-dot";
+          dot.setAttribute("role", "tab");
+          dot.setAttribute(
+            "aria-label",
+            "Show " + (slide.dataset.caption || "photo " + (i + 1)),
+          );
+          dot.setAttribute("aria-selected", "false");
+          dot.addEventListener("click", () => {
+            goTo(i);
+            restart();
+          });
+          dotsHost.appendChild(dot);
+          return dot;
+        });
+
+        slides.forEach((slide, i) => {
+          const img = slide.querySelector("img");
+          img.addEventListener(
+            "error",
+            () => {
+              broken.add(i);
+              slide.style.display = "none";
+              dots[i].style.display = "none";
+              if (current === i) next();
+            },
+            { once: true },
+          );
+        });
+
+        function firstAvailable() {
+          for (let i = 0; i < slides.length; i++) {
+            if (!broken.has(i)) return i;
+          }
+          return -1;
+        }
+
+        function goTo(index) {
+          if (broken.has(index)) return;
+          if (current >= 0) {
+            slides[current].classList.remove("is-active");
+            dots[current].setAttribute("aria-selected", "false");
+          }
+          current = index;
+          slides[current].classList.add("is-active");
+          dots[current].setAttribute("aria-selected", "true");
+        }
+
+        function next() {
+          if (broken.size >= slides.length) return;
+          let i = current;
+          for (let step = 0; step < slides.length; step++) {
+            i = (i + 1) % slides.length;
+            if (!broken.has(i)) {
+              goTo(i);
+              return;
+            }
+          }
+        }
+
+        function start() {
+          stop();
+          timer = setInterval(next, AUTOPLAY_MS);
+        }
+        function stop() {
+          if (timer) clearInterval(timer);
+          timer = null;
+        }
+        function restart() {
+          stop();
+          start();
+        }
+
+        slider.addEventListener("mouseenter", stop);
+        slider.addEventListener("mouseleave", start);
+        slider.addEventListener("focusin", stop);
+        slider.addEventListener("focusout", start);
+
+        const startIndex = firstAvailable();
+        if (startIndex >= 0) {
+          goTo(startIndex);
+          start();
+        }
+      })();
+
+      // ---- Typewriter effect: "Easy to discover" / "Easy to communicate".
+      // For each of the two columns: the paragraph types out first, and
+      // only once it's fully visible do that column's list items start
+      // typing (staggered). Triggered once, when the "Two things, done
+      // well" section scrolls into view. ----
+      (function () {
+        const duoItems = document.querySelectorAll(".duo-item");
+        if (duoItems.length === 0) return;
+
+        const TYPE_SPEED = 32; // ms per character while typing
+        const STAGGER_MS = 180; // stagger between each list item's start
+
+        function typeOne(el, full, onComplete) {
+          el.classList.add("tw-el");
+          let i = 0;
+          function tick() {
+            i++;
+            el.textContent = full.slice(0, i);
+            if (i >= full.length) {
+              el.classList.remove("tw-el"); // drop the blinking cursor once done
+              if (onComplete) onComplete();
+              return;
+            }
+            setTimeout(tick, TYPE_SPEED);
+          }
+          tick();
+        }
+
+        // Grab and clear all text up front so nothing flashes full-text
+        // before the animation kicks off.
+        const columns = Array.from(duoItems).map((duoItem) => {
+          const p = duoItem.querySelector(":scope > p");
+          const listSpans = Array.from(
+            duoItem.querySelectorAll(".duo-features li span"),
+          );
+          const pFull = p.textContent.trim().replace(/\s+/g, " ");
+          p.textContent = "";
+          const listItems = listSpans.map((el) => {
+            const full = el.textContent.trim().replace(/\s+/g, " ");
+            el.textContent = "";
+            return { el, full };
+          });
+          return { p, pFull, listItems };
+        });
+
+        function playOnce() {
+          columns.forEach(({ p, pFull, listItems }) => {
+            typeOne(p, pFull, () => {
+              listItems.forEach((item, index) => {
+                setTimeout(
+                  () => typeOne(item.el, item.full),
+                  index * STAGGER_MS,
+                );
+              });
+            });
+          });
+        }
+
+        const section = document.querySelector("section.two-things");
+        if (!section || !("IntersectionObserver" in window)) {
+          playOnce();
+          return;
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                playOnce();
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.3 },
+        );
+        observer.observe(section);
+      })();
     </script>
   </body>
 </html>
