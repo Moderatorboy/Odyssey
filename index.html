@@ -1423,8 +1423,21 @@
       const profileEmail = document.querySelector(".profile-email");
       const profileSocials = document.querySelectorAll(".profile-socials");
 
+      const savedTheme = localStorage.getItem("odyssey-theme");
+      if (savedTheme === "light") document.body.classList.add("light");
+      themeToggle.textContent = document.body.classList.contains("light")
+        ? "☾"
+        : "☼";
+      themeToggle.setAttribute(
+        "aria-label",
+        document.body.classList.contains("light")
+          ? "Switch to dark mode"
+          : "Switch to light mode",
+      );
+
       themeToggle.addEventListener("click", () => {
         const lightMode = document.body.classList.toggle("light");
+        localStorage.setItem("odyssey-theme", lightMode ? "light" : "dark");
         themeToggle.textContent = lightMode ? "☾" : "☼";
         themeToggle.setAttribute(
           "aria-label",
