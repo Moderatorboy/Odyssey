@@ -296,6 +296,11 @@
         position: relative;
         display: flex;
         flex-direction: column;
+        cursor: pointer;
+      }
+      .card:focus-visible {
+        outline: 1.5px solid var(--cyan);
+        outline-offset: 6px;
       }
       .card-thumb {
         width: 100%;
@@ -324,6 +329,12 @@
         transition: color 0.15s ease;
       }
       .card:hover h3 {
+        color: var(--cyan-bright);
+      }
+      .card:focus-visible .card-thumb img {
+        transform: scale(1.035);
+      }
+      .card:focus-visible h3 {
         color: var(--cyan-bright);
       }
       .card-meta {
@@ -689,6 +700,17 @@
         filtered.forEach((r) => {
           const card = document.createElement("div");
           card.className = "card";
+          card.setAttribute("role", "link");
+          card.tabIndex = 0;
+          card.addEventListener("click", (event) => {
+            if (event.target.closest(".view-link")) return;
+            window.location.href = "outreach.html";
+          });
+          card.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            window.location.href = "outreach.html";
+          });
 
           const thumbSrc =
             safeUrl(r.thumbnail, { allowData: true }) || PLACEHOLDER_THUMB;
